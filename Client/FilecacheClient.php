@@ -37,8 +37,8 @@ class FilecacheClient implements ClientInterface
         }
 
         $this->path = $path;
-        if (substr($this->path, -1) !== '/') {
-            $this->path .= '/';
+        if (substr($this->path, -1) === '/') {
+            $this->path = substr($this->path, 0, -1);
         }
     }
 
@@ -158,6 +158,6 @@ class FilecacheClient implements ClientInterface
      */
     private function getFilename($key)
     {
-        return $this->path . md5($key) . '_file.cache';
+        return $this->path . DIRECTORY_SEPARATOR . md5($key) . '_file.cache';
     }
 }
