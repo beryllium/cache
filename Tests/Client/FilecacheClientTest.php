@@ -1,13 +1,6 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: kevinb
- * Date: 13-11-26
- * Time: 12:02 AM
- */
 
 namespace Beryllium\Cache\Tests\Client;
-
 
 use Beryllium\Cache\Client\FilecacheClient;
 use org\bovigo\vfs\vfsStream;

@@ -24,6 +24,8 @@ class FilecacheClient implements ClientInterface
      */
     public function __construct($path)
     {
+        $path = rtrim($path, DIRECTORY_SEPARATOR);
+
         if (empty($path)) {
             return;
         }
@@ -37,9 +39,6 @@ class FilecacheClient implements ClientInterface
         }
 
         $this->path = $path;
-        if (substr($this->path, -1) === '/') {
-            $this->path = substr($this->path, 0, -1);
-        }
     }
 
     /**
