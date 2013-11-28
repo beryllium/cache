@@ -3,6 +3,8 @@
 namespace Beryllium\Cache\Tests\Client;
 
 use Beryllium\Cache\Client\FilecacheClient;
+use Beryllium\Cache\Statistics\Manager\FilecacheStatisticsManager;
+use Beryllium\Cache\Statistics\Tracker\FilecacheStatisticsTracker;
 use org\bovigo\vfs\vfsStream;
 
 class FilecacheClientTest extends \PHPUnit_Framework_TestCase
@@ -45,6 +47,32 @@ class FilecacheClientTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($this->cache->delete('test'));
 
         $this->assertFalse($this->cache->get('test'));
+    }
+
+    public function testStats()
+    {
+        $stats   = new FilecacheStatisticsTracker(vfsStream::url('cacheDir'));
+        $manager = new FilecacheStatisticsManager(vfsStream::url('cacheDir'));
+
+        $this->cache->setStatisticsTracker($stats);
+        $this->cache->get('test');
+        $this->cache->set('test', 'testing', 300);
+        $this->cache->get('test');
+
+        $data = $manager->getStatistics();
+
+        $this->assertEquals(array('File cache'), array_keys($data));
+
+        $numbers = $data['File cache']->getFormattedArray();
+
+        $this->assertEquals(
+            array(
+                'Hits'        => 1,
+                'Misses'      => 1,
+                'Helpfulness' => '50.00'
+            ),
+            $numbers
+        );
     }
 }
  
