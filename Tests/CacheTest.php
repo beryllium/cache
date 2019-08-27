@@ -3,6 +3,7 @@
 namespace Beryllium\Cache\Tests;
 
 use Beryllium\Cache\Cache;
+use PHPUnit\Framework\TestCase;
 
 /**
  * @package
@@ -10,11 +11,11 @@ use Beryllium\Cache\Cache;
  * @author Jeremy Livingston <jeremyjlivingston@gmail.com>
  * @license See LICENSE.md
  */
-class CacheTest extends \PHPUnit_Framework_TestCase
+class CacheTest extends TestCase
 {
     protected $client;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->client = $this->getMockBuilder('Beryllium\Cache\Client\ClientInterface')
             ->getMock();

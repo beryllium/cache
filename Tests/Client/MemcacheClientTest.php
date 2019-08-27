@@ -3,6 +3,7 @@
 namespace Beryllium\Cache\Tests\Client;
 
 use Beryllium\Cache\Client\MemcacheClient;
+use PHPUnit\Framework\TestCase;
 
 /**
  * @package
@@ -10,12 +11,12 @@ use Beryllium\Cache\Client\MemcacheClient;
  * @author Jeremy Livingston <jeremyjlivingston@gmail.com>
  * @license See LICENSE.md
  */
-class MemcacheClientTest extends \PHPUnit_Framework_TestCase
+class MemcacheClientTest extends TestCase
 {
     protected $memcache;
     protected $serverVerifier;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->memcache = $this->getMockBuilder('Memcache')
             ->getMock();

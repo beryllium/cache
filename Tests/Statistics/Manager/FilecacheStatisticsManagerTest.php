@@ -4,6 +4,7 @@ namespace Beryllium\Cache\Tests\Statistics\Manager;
 
 use Beryllium\Cache\Statistics\Manager\FilecacheStatisticsManager;
 use org\bovigo\vfs\vfsStream;
+use PHPUnit\Framework\TestCase;
 
 /**
  * @package
@@ -11,13 +12,13 @@ use org\bovigo\vfs\vfsStream;
  * @author Jeremy Livingston <jeremyjlivingston@gmail.com>
  * @license See LICENSE.md
  */
-class FilecacheStatisticsManagerTest extends \PHPUnit_Framework_TestCase
+class FilecacheStatisticsManagerTest extends TestCase
 {
     private $path;
     private $root;
     private $filename;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->path = 'test-path';
         $this->filename = '__stats';

@@ -6,8 +6,9 @@ use Beryllium\Cache\Client\FilecacheClient;
 use Beryllium\Cache\Statistics\Manager\FilecacheStatisticsManager;
 use Beryllium\Cache\Statistics\Tracker\FilecacheStatisticsTracker;
 use org\bovigo\vfs\vfsStream;
+use PHPUnit\Framework\TestCase;
 
-class FilecacheClientTest extends \PHPUnit_Framework_TestCase
+class FilecacheClientTest extends TestCase
 {
 
     /**
@@ -20,7 +21,7 @@ class FilecacheClientTest extends \PHPUnit_Framework_TestCase
      */
     public $cache;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->vfs   = vfsStream::setup('cacheDir');
         $this->cache = new FilecacheClient(vfsStream::url('cacheDir'));

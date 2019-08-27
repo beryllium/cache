@@ -3,6 +3,7 @@
 namespace Beryllium\Cache\Tests\Statistics;
 
 use Beryllium\Cache\Statistics\Statistics;
+use PHPUnit\Framework\TestCase;
 
 /**
  * @package
@@ -10,7 +11,7 @@ use Beryllium\Cache\Statistics\Statistics;
  * @author Jeremy Livingston <jeremyjlivingston@gmail.com>
  * @license See LICENSE.md
  */
-class StatisticsTest extends \PHPUnit_Framework_TestCase
+class StatisticsTest extends TestCase
 {
     public function testUnitializedHitsEqualZero()
     {
