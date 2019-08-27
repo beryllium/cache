@@ -30,6 +30,5 @@
     "autoload":
     {
         "psr-4": { "Beryllium\\Cache\\": "" }
-    },
-    "target-dir": "Beryllium/Cache"
+    }
 }
