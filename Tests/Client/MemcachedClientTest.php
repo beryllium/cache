@@ -2,8 +2,9 @@
 
 namespace Beryllium\Cache\Tests\Client;
 
-use Beryllium\Cache\Client\MemcacheClient;
+use Beryllium\Cache\Client\MemcachedClient;
 use PHPUnit\Framework\TestCase;
+use Beryllium\Cache\Client\ServerVerifier\ServerVerifierInterface;
 
 /**
  * @package
@@ -11,23 +12,23 @@ use PHPUnit\Framework\TestCase;
  * @author Jeremy Livingston <jeremyjlivingston@gmail.com>
  * @license See LICENSE.md
  */
-class MemcacheClientTest extends TestCase
+class MemcachedClientTest extends TestCase
 {
     protected $memcache;
     protected $serverVerifier;
 
     protected function setUp(): void
     {
-        $this->memcache = $this->getMockBuilder('Memcache')
+        $this->memcache = $this->getMockBuilder(\Memcached::class)
             ->getMock();
 
-        $this->serverVerifier = $this->getMockBuilder('Beryllium\Cache\Client\ServerVerifier\ServerVerifierInterface')
+        $this->serverVerifier = $this->getMockBuilder(ServerVerifierInterface::class)
             ->getMock();
     }
 
     public function testUnsafeGetReturnsFalse()
     {
-        $client = new MemcacheClient($this->memcache);
+        $client = new MemcachedClient($this->memcache);
         $result = $client->get('test-key');
 
         $this->assertFalse($result);
@@ -35,7 +36,7 @@ class MemcacheClientTest extends TestCase
 
     public function testUnsafeSetReturnsFalse()
     {
-        $client = new MemcacheClient($this->memcache);
+        $client = new MemcachedClient($this->memcache);
         $result = $client->set('test-key', 'test-value', 555);
 
         $this->assertFalse($result);
@@ -43,7 +44,7 @@ class MemcacheClientTest extends TestCase
 
     public function testUnsafeDeleteReturnsFalse()
     {
-        $client = new MemcacheClient($this->memcache);
+        $client = new MemcachedClient($this->memcache);
         $result = $client->delete('test-key');
 
         $this->assertFalse($result);
@@ -59,7 +60,7 @@ class MemcacheClientTest extends TestCase
             ->with($this->equalTo($ip), $this->equalTo($port));
 
 
-        $client = new MemcacheClient($this->memcache, $this->serverVerifier);
+        $client = new MemcachedClient($this->memcache, $this->serverVerifier);
         $client->addServer($ip, $port);
     }
 
@@ -69,13 +70,13 @@ class MemcacheClientTest extends TestCase
             ->method('verify')
             ->will($this->returnValue(false));
 
-        $client = new MemcacheClient($this->memcache, $this->serverVerifier);
+        $client = new MemcachedClient($this->memcache, $this->serverVerifier);
         $result = $client->addServer('127.0.0.1', 555);
 
         $this->assertFalse($result);
     }
 
-    public function testAddServerCallsMemcache()
+    public function testAddServerCallsMemcached()
     {
         $ip = '127.0.0.1';
         $port = 555;
@@ -88,7 +89,7 @@ class MemcacheClientTest extends TestCase
             ->method('addServer')
             ->with($this->equalTo($ip), $this->equalTo($port));
 
-        $client = new MemcacheClient($this->memcache, $this->serverVerifier);
+        $client = new MemcachedClient($this->memcache, $this->serverVerifier);
         $client->addServer($ip, $port);
     }
 
@@ -105,7 +106,7 @@ class MemcacheClientTest extends TestCase
             ->method('addServer')
             ->will($this->returnValue($addServerResult));
 
-        $client = new MemcacheClient($this->memcache, $this->serverVerifier);
+        $client = new MemcachedClient($this->memcache, $this->serverVerifier);
         $result = $client->addServer('127.0.0.1', 555);
 
         $this->assertEquals($expectedReturn, $result);
@@ -119,7 +120,7 @@ class MemcacheClientTest extends TestCase
         );
     }
 
-    public function testSafeGetCallsMemcache()
+    public function testSafeGetCallsMemcached()
     {
         $key = 'test-key';
 
@@ -131,7 +132,7 @@ class MemcacheClientTest extends TestCase
         $client->get($key);
     }
 
-    public function testSafeSetCallsMemcache()
+    public function testSafeSetCallsMemcached()
     {
         $key = 'test-key';
         $value = 'test-value';
@@ -145,7 +146,7 @@ class MemcacheClientTest extends TestCase
         $client->set($key, $value, $ttl);
     }
 
-    public function testSafeDeleteCallsMemcache()
+    public function testSafeDeleteCallsMemcached()
     {
         $key = 'test-key';
 
@@ -167,7 +168,7 @@ class MemcacheClientTest extends TestCase
             ->method('addServer')
             ->will($this->returnValue(true));
 
-        $client = new MemcacheClient($this->memcache, $this->serverVerifier);
+        $client = new MemcachedClient($this->memcache, $this->serverVerifier);
         $client->addServer('127.0.0.1', 555);
 
         return $client;

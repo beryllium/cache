@@ -14,22 +14,22 @@ use Beryllium\Cache\Client\ServerVerifier\ServerVerifierInterface;
  * @author Kevin Boyd <beryllium@beryllium.ca>
  * @license See LICENSE.md
  */
-class MemcacheClient implements ClientInterface
+class MemcachedClient implements ClientInterface
 {
-    /** @var \Memcache|null Memcache instance */
+    /** @var \Memcached|null Memcache instance */
     protected $memcache;
 
-    protected $safe = false;
-    protected $servers = array();
+    protected $safe    = false;
+    protected $servers = [];
 
     /**
      * Constructs the cache client using an injected Memcache instance
      *
      * @access public
      */
-    public function __construct(\Memcache $memcache = null, ServerVerifierInterface $serverVerifier = null)
+    public function __construct(\Memcached $memcache = null, ServerVerifierInterface $serverVerifier = null)
     {
-        $this->memcache = $memcache ?: new \Memcache();
+        $this->memcache = $memcache ?: new \Memcached();
         $this->serverVerifier = $serverVerifier ?: new MemcacheServerVerifier();
     }
 
@@ -83,9 +83,9 @@ class MemcacheClient implements ClientInterface
     /**
      * Get the current Memcache object. Can be useful for retrieving the service after using the addServer method.
      *
-     * @return \Memcache|null
+     * @return \Memcached|null
      */
-    public function getMemcache()
+    public function getMemcached()
     {
         return $this->memcache;
     }
