@@ -12,7 +12,7 @@ use Psr\SimpleCache\CacheInterface;
  * @author Yaroslav Nechaev <mail@remper.ru>
  * @license See LICENSE.md
  */
-class APCClient implements ClientInterface, CacheInterface
+class APCClient implements CacheInterface
 {
     private $safe;
 

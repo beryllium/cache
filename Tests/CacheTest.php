@@ -4,7 +4,6 @@ namespace Beryllium\Cache\Tests;
 
 use Beryllium\Cache\Cache;
 use PHPUnit\Framework\TestCase;
-use Beryllium\Cache\Client\ClientInterface;
 use Psr\SimpleCache\CacheInterface;
 
 /**
