@@ -50,7 +50,7 @@ class FilecacheClient implements CacheInterface
      */
     public function get($key, $default = null)
     {
-        if (!$this->isSafe() || empty($key)) {
+        if (empty($key) || !$this->isSafe()) {
             return $default;
         }
 
@@ -60,7 +60,7 @@ class FilecacheClient implements CacheInterface
             return $default;
         }
 
-        $file = unserialize(file_get_contents($this->getFilename($key)));
+        $file = json_decode(file_get_contents($this->getFilename($key)), true);
 
         if (!is_array($file) || $file['key'] !== $key) {
             $this->incrementAndWriteStatistics(false);
@@ -97,7 +97,7 @@ class FilecacheClient implements CacheInterface
         );
 
         if ($this->isSafe() && !empty($key)) {
-            return (bool) file_put_contents($this->getFilename($key), serialize($file));
+            return (bool) file_put_contents($this->getFilename($key), json_encode($file));
         }
 
         return false;
@@ -125,7 +125,7 @@ class FilecacheClient implements CacheInterface
      */
     public function isSafe()
     {
-        return !is_null($this->path);
+        return $this->path !== null;
     }
 
     /**
@@ -170,7 +170,7 @@ class FilecacheClient implements CacheInterface
      */
     public function clear()
     {
-        // TODO: Implement clear() method.
+        throw new \RuntimeException('FilecacheClient clear() support is not implemented.');
     }
 
     /**
@@ -190,6 +190,14 @@ class FilecacheClient implements CacheInterface
      */
     public function has($key)
     {
-        // TODO: Implement has() method.
+        if (empty($key) || !$this->isSafe()) {
+            return false;
+        }
+
+        if (!file_exists($this->getFilename($key))) {
+            return false;
+        }
+
+        return true;
     }
 }
