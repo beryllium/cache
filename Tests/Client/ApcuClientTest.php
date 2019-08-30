@@ -9,8 +9,8 @@ class ApcuClientTest extends TestCase
 {
     public function testInstantiation(): void
     {
-        if (!\extension_loaded('apcu') || !ini_get('apcu.enable_cli')) {
-            $this->markTestSkipped('APCu extension is not loaded');
+        if (!\extension_loaded('apcu') || !ini_get('apc.enable_cli')) {
+            $this->markTestSkipped('APCu extension is not loaded/enabled. "php -d apc.enable_cli=1" must be used on the command line to enable this test.');
         }
 
         $key    = 'pid-' . getmypid();
