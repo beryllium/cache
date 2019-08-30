@@ -27,10 +27,15 @@
     {
         "mikey179/vfsstream": "1.2.*",
         "phpunit/phpunit": "^8.3",
-        "ext-memcached": "*"
+        "ext-memcached": "*",
+        "ext-apcu": "*"
     },
     "autoload":
     {
-        "psr-4": { "Beryllium\\Cache\\": "" }
+        "psr-4": { "Beryllium\\Cache\\": "src/" }
+    },
+    "autoload-dev":
+    {
+        "psr-4": { "Beryllium\\Cache\\Tests\\": "tests/" }
     }
 }

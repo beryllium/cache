@@ -7,12 +7,12 @@
          convertWarningsToExceptions="true"
          processIsolation="false"
          stopOnFailure="false"
-         bootstrap="Tests/bootstrap.php"
+         bootstrap="tests/bootstrap.php"
         >
 
     <testsuites>
         <testsuite name="Beryllium Cache Test Suite">
-            <directory>./Tests</directory>
+            <directory>./tests</directory>
         </testsuite>
     </testsuites>
 </phpunit>

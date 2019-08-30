@@ -1,0 +1,22 @@
+language: php
+
+php:
+  - 7.2
+  - 7.3
+
+dist: xenial
+
+cache:
+  directories:
+    - $HOME/.composer/cache
+
+before_script:
+  - composer self-update
+  - composer install
+
+install:
+  - echo "extension = memcached.so" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
+  - echo "extension = apcu.so" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
+
+script:
+  - php -d apc.enable_cli=1 vendor/bin/phpunit
