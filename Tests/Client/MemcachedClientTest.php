@@ -140,7 +140,7 @@ class MemcachedClientTest extends TestCase
 
         $this->memcache->expects($this->once())
             ->method('set')
-            ->with($this->equalTo($key), $this->equalTo($value), $this->equalTo(false), $this->equalTo($ttl));
+            ->with($this->equalTo($key), $this->equalTo($value), $this->equalTo($ttl));
 
         $client = $this->getSafeClient();
         $client->set($key, $value, $ttl);
