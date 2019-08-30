@@ -148,7 +148,7 @@ class Cache implements CacheInterface
      */
     public function getMultiple($keys, $default = null)
     {
-        $keys = array_map([$this, 'buildKey'], $keys);
+        $keys = array_map([$this, 'buildKey'], (array)$keys);
 
         return $this->client->getMultiple($keys, $default);
     }
@@ -191,7 +191,7 @@ class Cache implements CacheInterface
      */
     public function deleteMultiple($keys): bool
     {
-        $keys = array_map([$this, 'buildKey'], $keys);
+        $keys = array_map([$this, 'buildKey'], (array)$keys);
 
         return $this->client->deleteMultiple($keys);
     }
