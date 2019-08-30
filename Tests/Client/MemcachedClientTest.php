@@ -26,12 +26,12 @@ class MemcachedClientTest extends TestCase
             ->getMock();
     }
 
-    public function testUnsafeGetReturnsFalse()
+    public function testUnsafeGetReturnsNull()
     {
         $client = new MemcachedClient($this->memcache);
         $result = $client->get('test-key');
 
-        $this->assertFalse($result);
+        $this->assertNull($result);
     }
 
     public function testUnsafeSetReturnsFalse()

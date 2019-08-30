@@ -50,17 +50,24 @@ class MemcachedClient implements CacheInterface
     /**
      * Retrieve a value from memcache
      *
-     * @param string|array $key Unique identifier or array of identifiers
+     * @param string|array $key     Unique identifier or array of identifiers
+     * @param mixed        $default Default value in case key is not found
      *
-     * @return mixed Requested value, or false if an error occurs
+     * @return mixed Requested value, or default if an error occurs or the key is not found
      */
     public function get($key, $default = null)
     {
-        if ($this->safe) {
-            return $this->memcache->get($key) ?? $default;
+        if (!$this->safe) {
+            return $default;
         }
 
-        return false;
+        $result = $this->memcache->get($key);
+
+        if (!$result && \Memcached::RES_NOTFOUND === $this->memcache->getResultCode()) {
+            return $default;
+        }
+
+        return $result;
     }
 
     /**
