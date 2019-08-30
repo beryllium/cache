@@ -2,30 +2,28 @@
 
 namespace Beryllium\Cache\Client;
 
+use Beryllium\Cache\Exception\InvalidArgumentException;
 use Psr\SimpleCache\CacheInterface;
 
 /**
- * APC Client
- *
- * @package
- * @version $id$
- * @author Yaroslav Nechaev <mail@remper.ru>
- * @license See LICENSE.md
+ * APCu Client
  */
-class APCClient implements CacheInterface
+class ApcuClient implements CacheInterface
 {
     private $safe;
 
     public function __construct()
     {
-        $this->safe = extension_loaded('apc');
+        $this->safe = \extension_loaded('apcu');
     }
 
     /**
      * Retrieve the value corresponding to a provided key
      *
-     * @param string $key Unique identifier
-     * @return mixed Result from the cache
+     * @param string $key       Unique identifier
+     * @param null   $default   Default value to return on a cache miss
+     *
+     * @return  mixed           Result from the cache
      */
     public function get($key, $default = null)
     {
@@ -33,7 +31,7 @@ class APCClient implements CacheInterface
             return false;
         }
 
-        return apc_fetch($key) ?? $default;
+        return apcu_fetch($key) ?? $default;
     }
 
     /**
@@ -44,13 +42,13 @@ class APCClient implements CacheInterface
      * @param int $ttl Lifetime for stored data (in seconds)
      * @return boolean
      */
-    public function set($key, $value, $ttl = null)
+    public function set($key, $value, $ttl = null): bool
     {
         if (!$this->safe) {
             return false;
         }
 
-        return apc_store($key, $value, $ttl);
+        return apcu_store($key, $value, $ttl ?? 0);
     }
 
     /**
@@ -59,13 +57,13 @@ class APCClient implements CacheInterface
      * @param string $key
      * @return boolean
      */
-    public function delete($key)
+    public function delete($key): bool
     {
         if (!$this->safe) {
             return false;
         }
 
-        return apc_delete($key);
+        return apcu_delete($key);
     }
 
     /**
@@ -73,9 +71,13 @@ class APCClient implements CacheInterface
      *
      * @return bool True on success and false on failure.
      */
-    public function clear()
+    public function clear(): bool
     {
-        apc_clear_cache();
+        if (!$this->safe) {
+            return false;
+        }
+
+        return apcu_clear_cache();
     }
 
     /**
@@ -92,7 +94,15 @@ class APCClient implements CacheInterface
      */
     public function getMultiple($keys, $default = null)
     {
-        apc_fetch($keys);
+        if (!$this->safe) {
+            return false;
+        }
+
+        if (!\is_array($keys) || !$keys instanceof \Traversable) {
+            throw new InvalidArgumentException('Unable to getMultiple using non-array/non-Traversable keys');
+        }
+
+        return apcu_fetch($keys);
     }
 
     /**
@@ -109,9 +119,17 @@ class APCClient implements CacheInterface
      *   MUST be thrown if $values is neither an array nor a Traversable,
      *   or if any of the $values are not a legal value.
      */
-    public function setMultiple($values, $ttl = null)
+    public function setMultiple($values, $ttl = null): bool
     {
-        apc_store($values, null, $ttl);
+        if (!$this->safe) {
+            return false;
+        }
+
+        if (!\is_array($values) || !$values instanceof \Traversable) {
+            throw new InvalidArgumentException('Unable to setMultiple using non-array/non-Traversable values');
+        }
+
+        return apcu_store($values, null, $ttl);
     }
 
     /**
@@ -125,9 +143,17 @@ class APCClient implements CacheInterface
      *   MUST be thrown if $keys is neither an array nor a Traversable,
      *   or if any of the $keys are not a legal value.
      */
-    public function deleteMultiple($keys)
+    public function deleteMultiple($keys): bool
     {
-        apc_delete($keys);
+        if (!$this->safe) {
+            return false;
+        }
+
+        if (!\is_array($keys) || !$keys instanceof \Traversable) {
+            throw new InvalidArgumentException('Unable to deleteMultiple using non-array/non-Traversable keys');
+        }
+
+        return apcu_delete($keys);
     }
 
     /**
@@ -145,8 +171,12 @@ class APCClient implements CacheInterface
      * @throws \Psr\SimpleCache\InvalidArgumentException
      *   MUST be thrown if the $key string is not a legal value.
      */
-    public function has($key)
+    public function has($key): bool
     {
-        return apc_exists($key);
+        if (!$this->safe) {
+            return false;
+        }
+
+        return apcu_exists($key);
     }
 }
