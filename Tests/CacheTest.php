@@ -4,6 +4,7 @@ namespace Beryllium\Cache\Tests;
 
 use Beryllium\Cache\Cache;
 use PHPUnit\Framework\TestCase;
+use Psr\SimpleCache\CacheInterface;
 
 /**
  * @package
@@ -17,7 +18,7 @@ class CacheTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->client = $this->getMockBuilder('Beryllium\Cache\Client\ClientInterface')
+        $this->client = $this->getMockBuilder(CacheInterface::class)
             ->getMock();
     }
 
@@ -53,7 +54,7 @@ class CacheTest extends TestCase
                 $this->equalTo($expectedKey),
                 $this->equalTo($value),
                 $this->equalTo($ttl)
-            );
+            )->willReturn(true);
 
         $cache = new Cache($this->client);
 
@@ -72,7 +73,7 @@ class CacheTest extends TestCase
                 $this->anything(),
                 $this->anything(),
                 $this->equalTo(Cache::DEFAULT_TTL)
-            );
+            )->willReturn(true);
 
         $cache = new Cache($this->client);
         $cache->set('test-key', 'test-value');
@@ -88,7 +89,7 @@ class CacheTest extends TestCase
                 $this->anything(),
                 $this->anything(),
                 $this->equalTo($ttl)
-            );
+            )->willReturn(true);
 
         $cache = new Cache($this->client);
         $cache->setTtl($ttl);

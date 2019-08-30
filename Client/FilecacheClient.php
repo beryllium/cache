@@ -3,6 +3,7 @@
 namespace Beryllium\Cache\Client;
 
 use Beryllium\Cache\Statistics\Tracker\StatisticsTrackerInterface;
+use Psr\SimpleCache\CacheInterface;
 
 /**
  * Uses the filesystem to store and retrieve cache entries
@@ -12,8 +13,10 @@ use Beryllium\Cache\Statistics\Tracker\StatisticsTrackerInterface;
  * @author Kevin Boyd <beryllium@beryllium.ca>
  * @license See LICENSE.md
  */
-class FilecacheClient implements ClientInterface
+class FilecacheClient implements CacheInterface
 {
+    use MultipleKeysTrait;
+
     private $path;
 
     /** @var \Beryllium\Cache\Statistics\Tracker\StatisticsTrackerInterface */
@@ -30,7 +33,7 @@ class FilecacheClient implements ClientInterface
             return;
         }
 
-        if (!is_dir($path) && !mkdir($path)) {
+        if (!is_dir($path) && !mkdir($path) && !is_dir($path)) {
             return;
         }
 
@@ -45,36 +48,36 @@ class FilecacheClient implements ClientInterface
      * @param string $key
      * @return bool|mixed
      */
-    public function get($key)
+    public function get($key, $default = null)
     {
-        if (!$this->isSafe() || empty($key)) {
-            return false;
+        if (empty($key) || !$this->isSafe()) {
+            return $default;
         }
 
         if (!file_exists($this->getFilename($key))) {
             $this->incrementAndWriteStatistics(false);
 
-            return false;
+            return $default;
         }
 
-        $file = unserialize(file_get_contents($this->getFilename($key)));
+        $file = json_decode(file_get_contents($this->getFilename($key)), true);
 
         if (!is_array($file) || $file['key'] !== $key) {
             $this->incrementAndWriteStatistics(false);
 
-            return false;
+            return $default;
         }
 
         if ($file['ttl'] != 0 && time() - $file['ctime'] > $file['ttl']) {
             $this->incrementAndWriteStatistics(false);
             $this->delete($key);
 
-            return false;
+            return $default;
         }
 
         $this->incrementAndWriteStatistics(true);
 
-        return unserialize($file['value']);
+        return unserialize($file['value']) ?? $default;
     }
 
     /**
@@ -84,7 +87,7 @@ class FilecacheClient implements ClientInterface
      *
      * @return bool
      */
-    public function set($key, $value, $ttl)
+    public function set($key, $value, $ttl = null)
     {
         $file = array(
             'key'   => $key,
@@ -94,7 +97,7 @@ class FilecacheClient implements ClientInterface
         );
 
         if ($this->isSafe() && !empty($key)) {
-            return (bool) file_put_contents($this->getFilename($key), serialize($file));
+            return (bool) file_put_contents($this->getFilename($key), json_encode($file));
         }
 
         return false;
@@ -122,7 +125,7 @@ class FilecacheClient implements ClientInterface
      */
     public function isSafe()
     {
-        return !is_null($this->path);
+        return $this->path !== null;
     }
 
     /**
@@ -158,5 +161,43 @@ class FilecacheClient implements ClientInterface
     private function getFilename($key)
     {
         return $this->path . DIRECTORY_SEPARATOR . md5($key) . '_file.cache';
+    }
+
+    /**
+     * Wipes clean the entire cache's keys.
+     *
+     * @return bool True on success and false on failure.
+     */
+    public function clear()
+    {
+        throw new \RuntimeException('FilecacheClient clear() support is not implemented.');
+    }
+
+    /**
+     * Determines whether an item is present in the cache.
+     *
+     * NOTE: It is recommended that has() is only to be used for cache warming type purposes
+     * and not to be used within your live applications operations for get/set, as this method
+     * is subject to a race condition where your has() will return true and immediately after,
+     * another script can remove it making the state of your app out of date.
+     *
+     * @param string $key The cache item key.
+     *
+     * @return bool
+     *
+     * @throws \Psr\SimpleCache\InvalidArgumentException
+     *   MUST be thrown if the $key string is not a legal value.
+     */
+    public function has($key)
+    {
+        if (empty($key) || !$this->isSafe()) {
+            return false;
+        }
+
+        if (!file_exists($this->getFilename($key))) {
+            return false;
+        }
+
+        return true;
     }
 }

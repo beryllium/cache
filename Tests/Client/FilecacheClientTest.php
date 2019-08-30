@@ -47,7 +47,7 @@ class FilecacheClientTest extends TestCase
 
         $this->assertTrue($this->cache->delete('test'));
 
-        $this->assertFalse($this->cache->get('test'));
+        $this->assertSame(null, $this->cache->get('test'));
     }
 
     public function testStats()

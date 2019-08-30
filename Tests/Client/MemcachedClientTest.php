@@ -26,12 +26,12 @@ class MemcachedClientTest extends TestCase
             ->getMock();
     }
 
-    public function testUnsafeGetReturnsFalse()
+    public function testUnsafeGetReturnsNull()
     {
         $client = new MemcachedClient($this->memcache);
         $result = $client->get('test-key');
 
-        $this->assertFalse($result);
+        $this->assertNull($result);
     }
 
     public function testUnsafeSetReturnsFalse()
@@ -140,7 +140,7 @@ class MemcachedClientTest extends TestCase
 
         $this->memcache->expects($this->once())
             ->method('set')
-            ->with($this->equalTo($key), $this->equalTo($value), $this->equalTo(false), $this->equalTo($ttl));
+            ->with($this->equalTo($key), $this->equalTo($value), $this->equalTo($ttl));
 
         $client = $this->getSafeClient();
         $client->set($key, $value, $ttl);
