@@ -16,20 +16,25 @@ use Psr\SimpleCache\InvalidArgumentException;
  */
 class Cache implements CacheInterface
 {
-    public const DEFAULT_TTL = 300;
+    public const DEFAULT_TTL    = 300;
+    public const DEFAULT_PREFIX = '';
 
     /** @var CacheInterface $client */
     private $client;
 
-    private $ttl    = self::DEFAULT_TTL;
-    private $prefix = '';
+    private $ttl;
+    private $prefix;
 
     /**
      * @param CacheInterface $client
+     * @param string|null    $prefix
+     * @param int|null       $ttl
      */
-    public function __construct(CacheInterface $client)
+    public function __construct(CacheInterface $client, string $prefix = null, int $ttl = null)
     {
         $this->client = $client;
+        $this->prefix = $prefix ?? static::DEFAULT_PREFIX;
+        $this->ttl    = $ttl    ?? static::DEFAULT_TTL;
     }
 
     /**
@@ -43,7 +48,11 @@ class Cache implements CacheInterface
      */
     public function get($key, $default = null)
     {
-        return $this->client->get($this->getKey($key), $default);
+        if (\is_array($key)) {
+            return $this->getMultiple($key, $default);
+        }
+
+        return $this->client->get($key, $default);
     }
 
     /**
@@ -56,11 +65,11 @@ class Cache implements CacheInterface
      * @return boolean
      * @throws InvalidArgumentException
      */
-    public function set($key, $value, $ttl = null)
+    public function set($key, $value, $ttl = null): bool
     {
         $ttl = $ttl ?? $this->ttl;
 
-        return $this->client->set($this->getKey($key), $value, $ttl);
+        return $this->client->set($this->buildKey($key), $value, $ttl);
     }
 
     /**
@@ -73,7 +82,7 @@ class Cache implements CacheInterface
      */
     public function delete($key)
     {
-        return $this->client->delete($this->getKey($key));
+        return $this->client->delete($this->buildKey($key));
     }
 
     /**
@@ -82,7 +91,7 @@ class Cache implements CacheInterface
      * @param int $ttl
      * @return void
      */
-    public function setTtl($ttl)
+    public function setTtl(int $ttl): void
     {
         $this->ttl = $ttl;
     }
@@ -98,7 +107,7 @@ class Cache implements CacheInterface
     /**
      * @param string $prefix    A string to use as the prefix for all keys
      */
-    public function setPrefix($prefix): void
+    public function setPrefix(string $prefix): void
     {
         $this->prefix = $prefix;
     }
@@ -109,7 +118,7 @@ class Cache implements CacheInterface
      * @param $key
      * @return string
      */
-    private function getKey($key): string
+    private function buildKey($key): string
     {
         return $this->prefix . $key;
     }
@@ -139,6 +148,8 @@ class Cache implements CacheInterface
      */
     public function getMultiple($keys, $default = null)
     {
+        $keys = array_map([$this, 'buildKey'], $keys);
+
         return $this->client->getMultiple($keys, $default);
     }
 
@@ -156,9 +167,15 @@ class Cache implements CacheInterface
      *   MUST be thrown if $values is neither an array nor a Traversable,
      *   or if any of the $values are not a legal value.
      */
-    public function setMultiple($values, $ttl = null)
+    public function setMultiple($values, $ttl = null): bool
     {
-        return $this->client->setMultiple($values, $ttl);
+        $prefixedValues = [];
+
+        foreach ($values as $key => $value) {
+            $prefixedValues[$key] = $value;
+        }
+
+        return $this->client->setMultiple($prefixedValues, $ttl);
     }
 
     /**
@@ -172,8 +189,10 @@ class Cache implements CacheInterface
      *   MUST be thrown if $keys is neither an array nor a Traversable,
      *   or if any of the $keys are not a legal value.
      */
-    public function deleteMultiple($keys)
+    public function deleteMultiple($keys): bool
     {
+        $keys = array_map([$this, 'buildKey'], $keys);
+
         return $this->client->deleteMultiple($keys);
     }
 
@@ -192,8 +211,10 @@ class Cache implements CacheInterface
      * @throws InvalidArgumentException
      *   MUST be thrown if the $key string is not a legal value.
      */
-    public function has($key)
+    public function has($key): bool
     {
+        $key = $this->buildKey($key);
+
         return $this->client->has($key);
     }
 }
