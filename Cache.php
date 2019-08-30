@@ -52,7 +52,7 @@ class Cache implements CacheInterface
             return $this->getMultiple($key, $default);
         }
 
-        return $this->client->get($key, $default);
+        return $this->client->get($this->buildKey($key), $default);
     }
 
     /**

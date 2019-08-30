@@ -54,7 +54,7 @@ class CacheTest extends TestCase
                 $this->equalTo($expectedKey),
                 $this->equalTo($value),
                 $this->equalTo($ttl)
-            );
+            )->willReturn(true);
 
         $cache = new Cache($this->client);
 
@@ -73,7 +73,7 @@ class CacheTest extends TestCase
                 $this->anything(),
                 $this->anything(),
                 $this->equalTo(Cache::DEFAULT_TTL)
-            );
+            )->willReturn(true);
 
         $cache = new Cache($this->client);
         $cache->set('test-key', 'test-value');
@@ -89,7 +89,7 @@ class CacheTest extends TestCase
                 $this->anything(),
                 $this->anything(),
                 $this->equalTo($ttl)
-            );
+            )->willReturn(true);
 
         $cache = new Cache($this->client);
         $cache->setTtl($ttl);
