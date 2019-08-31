@@ -3,7 +3,6 @@
 namespace Beryllium\Cache\Tests;
 
 use Beryllium\Cache\Cache;
-use Beryllium\Cache\Client\ApcuClient;
 use Beryllium\Cache\Tests\Client\MemoryClientTest;
 use Psr\SimpleCache\CacheInterface;
 
