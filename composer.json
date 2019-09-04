@@ -37,5 +37,10 @@
     "autoload-dev":
     {
         "psr-4": { "Beryllium\\Cache\\Tests\\": "tests/" }
+    },
+    "scripts": {
+        "test": [
+            "php -dapc.enable_cli=1 vendor/bin/phpunit"
+        ]
     }
 }
