@@ -78,7 +78,7 @@ class FilecacheClient implements CacheInterface
 
         $this->incrementAndWriteStatistics(true);
 
-        return unserialize($file['value']) ?? $default;
+        return $this->unserialize($file['value']) ?? $default;
     }
 
     /**
@@ -92,7 +92,7 @@ class FilecacheClient implements CacheInterface
     {
         $file = array(
             'key'   => $key,
-            'value' => serialize($value),
+            'value' => $this->serialize($value),
             'ttl'   => $ttl,
             'ctime' => time(),
         );
@@ -188,5 +188,15 @@ class FilecacheClient implements CacheInterface
         }
 
         return file_exists($this->getFilename($key));
+    }
+
+    protected function serialize($data)
+    {
+        return serialize($data);
+    }
+
+    protected function unserialize($data, ?$options = null)
+    {
+        return unserialize($data, $options);
     }
 }
