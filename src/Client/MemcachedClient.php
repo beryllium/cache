@@ -33,7 +33,6 @@ class MemcachedClient implements CacheInterface
     /** @var \Memcached|null Memcached instance */
     protected $memcache;
 
-    protected $safe    = false;
     /** @var ServerVerifierInterface|null */
     protected $serverVerifier;
 
@@ -61,10 +60,6 @@ class MemcachedClient implements CacheInterface
      */
     public function get($key, $default = null)
     {
-        if (!$this->safe) {
-            return $default;
-        }
-
         $result = $this->memcache->get($key);
 
         if (!$result && \Memcached::RES_NOTFOUND === $this->memcache->getResultCode()) {
@@ -85,11 +80,7 @@ class MemcachedClient implements CacheInterface
      */
     public function set($key, $value, $ttl = null)
     {
-        if ($this->safe) {
-            return $this->memcache->set($key, $value, $ttl);
-        }
-
-        return false;
+        return $this->memcache->set($key, $value, $ttl);
     }
 
     /**
@@ -101,11 +92,7 @@ class MemcachedClient implements CacheInterface
      */
     public function delete($key)
     {
-        if ($this->safe) {
-            return $this->memcache->delete($key);
-        }
-
-        return false;
+        return $this->memcache->delete($key);
     }
 
     /**
@@ -132,11 +119,7 @@ class MemcachedClient implements CacheInterface
             return false;
         }
 
-        if ($status = $this->memcache->addServer($ip, $port)) {
-            $this->safe = true;
-        }
-
-        return $status;
+        return $this->memcache->addServer($ip, $port);
     }
 
     /**
