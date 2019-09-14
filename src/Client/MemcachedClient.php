@@ -18,12 +18,6 @@ use Psr\SimpleCache\CacheInterface;
  *
  * If the expiration value is 0 (the default), the item never expires (although it may be deleted from the server to
  * make place for other items).
- *
- * @uses    CacheInterface
- * @package
- * @version $id$
- * @author  Kevin Boyd <beryllium@beryllium.ca>
- * @license See LICENSE.md
  */
 class MemcachedClient implements CacheInterface
 {

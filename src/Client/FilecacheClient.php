@@ -7,11 +7,6 @@ use Psr\SimpleCache\CacheInterface;
 
 /**
  * Uses the filesystem to store and retrieve cache entries
- *
- * @package
- * @version $id$
- * @author Kevin Boyd <beryllium@beryllium.ca>
- * @license See LICENSE.md
  */
 class FilecacheClient implements CacheInterface
 {
@@ -111,6 +106,8 @@ class FilecacheClient implements CacheInterface
     }
 
     /**
+     * Build a full path for the provided key
+     *
      * @param string $key
      * @return string
      */

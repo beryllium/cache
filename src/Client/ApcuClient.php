@@ -10,10 +10,6 @@ use Psr\SimpleCache\CacheInterface;
  */
 class ApcuClient implements CacheInterface
 {
-    public function __construct()
-    {
-    }
-
     /**
      * Retrieve the value corresponding to a provided key
      *
