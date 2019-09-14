@@ -2,6 +2,7 @@
 
 namespace Beryllium\Cache\Client;
 
+use Beryllium\Cache\Exception\InvalidPathException;
 use Beryllium\Cache\Statistics\Tracker\StatisticsTrackerInterface;
 use Psr\SimpleCache\CacheInterface;
 
@@ -30,15 +31,15 @@ class FilecacheClient implements CacheInterface
         $path = rtrim($path, DIRECTORY_SEPARATOR);
 
         if (empty($path)) {
-            return;
+            throw new InvalidPathException('Path was not provided');
         }
 
         if (!is_dir($path) && !mkdir($path) && !is_dir($path)) {
-            return;
+            throw new InvalidPathException('Provided path directory does not exist and/or could not be created');
         }
 
         if (!is_writable($path)) {
-            return;
+            throw new InvalidPathException('Provided path is not a writable directory');
         }
 
         $this->path = $path;
@@ -121,14 +122,6 @@ class FilecacheClient implements CacheInterface
     }
 
     /**
-     * @return bool
-     */
-    public function isSafe()
-    {
-        return $this->path !== null;
-    }
-
-    /**
      * @param StatisticsTrackerInterface $statisticsTracker
      */
     public function setStatisticsTracker(StatisticsTrackerInterface $statisticsTracker)
@@ -190,14 +183,10 @@ class FilecacheClient implements CacheInterface
      */
     public function has($key)
     {
-        if (empty($key) || !$this->isSafe()) {
+        if (empty($key)) {
             return false;
         }
 
-        if (!file_exists($this->getFilename($key))) {
-            return false;
-        }
-
-        return true;
+        return file_exists($this->getFilename($key));
     }
 }
