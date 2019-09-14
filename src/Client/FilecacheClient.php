@@ -20,9 +20,9 @@ class FilecacheClient implements CacheInterface
     private $path;
 
     /**
-     * @param string|null $path
+     * @param string $path
      */
-    public function __construct($path)
+    public function __construct(string $path)
     {
         $path = rtrim($path, DIRECTORY_SEPARATOR);
 
@@ -114,7 +114,7 @@ class FilecacheClient implements CacheInterface
      * @param string $key
      * @return string
      */
-    private function getFilename($key)
+    protected function getFilename(string $key): string
     {
         return $this->path . DIRECTORY_SEPARATOR . md5($key) . '_file.cache';
     }
