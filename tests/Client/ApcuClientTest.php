@@ -9,6 +9,10 @@ class ApcuClientTest extends TestCase
 {
     public function testInstantiation(): void
     {
+        $enabled = ini_get('apc.enable_cli');
+        $this->assertSame('1', $enabled, 'Forgot to enable apc.enable_cli flag');
+
+        apcu_clear_cache();
         $key    = 'pid-' . getmypid();
         $client = new ApcuClient();
         $this->assertInstanceOf(ApcuClient::class, $client);
