@@ -51,7 +51,7 @@ class FilecacheClient implements CacheInterface
      */
     public function get($key, $default = null)
     {
-        if (empty($key) || !$this->isSafe()) {
+        if (empty($key)) {
             return $default;
         }
 
@@ -90,6 +90,10 @@ class FilecacheClient implements CacheInterface
      */
     public function set($key, $value, $ttl = null)
     {
+        if (empty($key)) {
+            return false;
+        }
+
         $file = array(
             'key'   => $key,
             'value' => $this->serialize($value),
@@ -97,11 +101,7 @@ class FilecacheClient implements CacheInterface
             'ctime' => time(),
         );
 
-        if ($this->isSafe() && !empty($key)) {
-            return (bool) file_put_contents($this->getFilename($key), json_encode($file));
-        }
-
-        return false;
+        return (bool)file_put_contents($this->getFilename($key), json_encode($file));
     }
 
     /**
