@@ -34,17 +34,21 @@ class MemcachedClient implements CacheInterface
     protected $memcache;
 
     protected $safe    = false;
-    protected $servers = [];
+    /** @var ServerVerifierInterface|null */
+    protected $serverVerifier;
 
     /**
      * Constructs the cache client using an injected Memcache instance
      *
      * @access public
+     *
+     * @param \Memcached|null              $memcache
+     * @param ServerVerifierInterface|null $serverVerifier
      */
-    public function __construct(\Memcached $memcache = null, ServerVerifierInterface $serverVerifier = null)
+    public function __construct(?\Memcached $memcache = null, ?ServerVerifierInterface $serverVerifier = null)
     {
         $this->memcache       = $memcache ?: new \Memcached();
-        $this->serverVerifier = $serverVerifier ?: new MemcacheServerVerifier();
+        $this->serverVerifier = $serverVerifier;
     }
 
     /**
@@ -124,7 +128,7 @@ class MemcachedClient implements CacheInterface
      */
     public function addServer($ip = '127.0.0.1', $port = 11211)
     {
-        if (!$this->serverVerifier->verify($ip, $port)) {
+        if ($this->serverVerifier && !$this->serverVerifier->verify($ip, $port)) {
             return false;
         }
 
