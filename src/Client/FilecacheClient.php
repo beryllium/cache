@@ -25,7 +25,7 @@ class FilecacheClient implements CacheInterface
             throw new InvalidPathException('Path was not provided');
         }
 
-        if (!is_dir($path) && !mkdir($path) && !is_dir($path)) {
+        if (!is_dir($path) && !@mkdir($path) && !is_dir($path)) {
             throw new InvalidPathException('Provided path directory does not exist and/or could not be created');
         }
 
@@ -155,7 +155,7 @@ class FilecacheClient implements CacheInterface
         return serialize($data);
     }
 
-    protected function unserialize($data, $options = null)
+    protected function unserialize($data, array $options = [])
     {
         return unserialize($data, $options);
     }

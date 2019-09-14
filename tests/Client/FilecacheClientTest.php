@@ -3,6 +3,7 @@
 namespace Beryllium\Cache\Tests\Client;
 
 use Beryllium\Cache\Client\FilecacheClient;
+use Beryllium\Cache\Exception\InvalidPathException;
 use Beryllium\Cache\Statistics\Manager\FilecacheStatisticsManager;
 use Beryllium\Cache\Statistics\Tracker\FilecacheStatisticsTracker;
 use org\bovigo\vfs\vfsStream;
@@ -27,11 +28,12 @@ class FilecacheClientTest extends TestCase
         $this->cache = new FilecacheClient(vfsStream::url('cacheDir'));
     }
 
-    public function testFilecacheConstruct()
+    public function testFilecacheConstructNonexistentPath()
     {
-        $this->assertTrue($this->cache->isSafe());
+        $this->expectException(InvalidPathException::class);
+        $this->expectExceptionMessage('Provided path directory does not exist and/or could not be created');
 
-        // @todo Test failure scenarios
+        new FilecacheClient('/tmp/this/folder/does/not/exist');
     }
 
     public function testSetAndGet()
