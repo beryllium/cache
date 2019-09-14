@@ -10,13 +10,6 @@ use Psr\SimpleCache\CacheInterface;
  */
 class ApcuClient implements CacheInterface
 {
-    private $safe;
-
-    public function __construct()
-    {
-        $this->safe = \extension_loaded('apcu');
-    }
-
     /**
      * Retrieve the value corresponding to a provided key
      *
@@ -27,10 +20,6 @@ class ApcuClient implements CacheInterface
      */
     public function get($key, $default = null)
     {
-        if (!$this->safe) {
-            return false;
-        }
-
         return apcu_fetch($key) ?? $default;
     }
 
@@ -44,10 +33,6 @@ class ApcuClient implements CacheInterface
      */
     public function set($key, $value, $ttl = null): bool
     {
-        if (!$this->safe) {
-            return false;
-        }
-
         return apcu_store($key, $value, $ttl ?? 0);
     }
 
@@ -59,10 +44,6 @@ class ApcuClient implements CacheInterface
      */
     public function delete($key): bool
     {
-        if (!$this->safe) {
-            return false;
-        }
-
         return apcu_delete($key);
     }
 
@@ -73,10 +54,6 @@ class ApcuClient implements CacheInterface
      */
     public function clear(): bool
     {
-        if (!$this->safe) {
-            return false;
-        }
-
         return apcu_clear_cache();
     }
 
@@ -94,10 +71,6 @@ class ApcuClient implements CacheInterface
      */
     public function getMultiple($keys, $default = null)
     {
-        if (!$this->safe) {
-            return false;
-        }
-
         if (!\is_array($keys) || !$keys instanceof \Traversable) {
             throw new InvalidArgumentException('Unable to getMultiple using non-array/non-Traversable keys');
         }
@@ -121,10 +94,6 @@ class ApcuClient implements CacheInterface
      */
     public function setMultiple($values, $ttl = null): bool
     {
-        if (!$this->safe) {
-            return false;
-        }
-
         if (!\is_array($values) || !$values instanceof \Traversable) {
             throw new InvalidArgumentException('Unable to setMultiple using non-array/non-Traversable values');
         }
@@ -145,10 +114,6 @@ class ApcuClient implements CacheInterface
      */
     public function deleteMultiple($keys): bool
     {
-        if (!$this->safe) {
-            return false;
-        }
-
         if (!\is_array($keys) || !$keys instanceof \Traversable) {
             throw new InvalidArgumentException('Unable to deleteMultiple using non-array/non-Traversable keys');
         }
@@ -173,10 +138,6 @@ class ApcuClient implements CacheInterface
      */
     public function has($key): bool
     {
-        if (!$this->safe) {
-            return false;
-        }
-
         return apcu_exists($key);
     }
 }

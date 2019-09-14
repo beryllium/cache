@@ -2,16 +2,11 @@
 
 namespace Beryllium\Cache\Client;
 
-use Beryllium\Cache\Statistics\Tracker\StatisticsTrackerInterface;
+use Beryllium\Cache\Exception\InvalidPathException;
 use Psr\SimpleCache\CacheInterface;
 
 /**
  * Uses the filesystem to store and retrieve cache entries
- *
- * @package
- * @version $id$
- * @author Kevin Boyd <beryllium@beryllium.ca>
- * @license See LICENSE.md
  */
 class FilecacheClient implements CacheInterface
 {
@@ -19,26 +14,23 @@ class FilecacheClient implements CacheInterface
 
     private $path;
 
-    /** @var \Beryllium\Cache\Statistics\Tracker\StatisticsTrackerInterface */
-    private $statisticsTracker;
-
     /**
-     * @param string|null $path
+     * @param string $path
      */
-    public function __construct($path)
+    public function __construct(string $path)
     {
         $path = rtrim($path, DIRECTORY_SEPARATOR);
 
         if (empty($path)) {
-            return;
+            throw new InvalidPathException('Path was not provided');
         }
 
-        if (!is_dir($path) && !mkdir($path) && !is_dir($path)) {
-            return;
+        if (!is_dir($path) && !@mkdir($path) && !is_dir($path)) {
+            throw new InvalidPathException('Provided path directory does not exist and/or could not be created');
         }
 
         if (!is_writable($path)) {
-            return;
+            throw new InvalidPathException('Provided path is not a writable directory');
         }
 
         $this->path = $path;
@@ -50,34 +42,27 @@ class FilecacheClient implements CacheInterface
      */
     public function get($key, $default = null)
     {
-        if (empty($key) || !$this->isSafe()) {
+        if (empty($key)) {
             return $default;
         }
 
         if (!file_exists($this->getFilename($key))) {
-            $this->incrementAndWriteStatistics(false);
-
             return $default;
         }
 
         $file = json_decode(file_get_contents($this->getFilename($key)), true);
 
         if (!is_array($file) || $file['key'] !== $key) {
-            $this->incrementAndWriteStatistics(false);
-
             return $default;
         }
 
         if ($file['ttl'] != 0 && time() - $file['ctime'] > $file['ttl']) {
-            $this->incrementAndWriteStatistics(false);
             $this->delete($key);
 
             return $default;
         }
 
-        $this->incrementAndWriteStatistics(true);
-
-        return unserialize($file['value']) ?? $default;
+        return $this->unserialize($file['value']) ?? $default;
     }
 
     /**
@@ -89,18 +74,18 @@ class FilecacheClient implements CacheInterface
      */
     public function set($key, $value, $ttl = null)
     {
+        if (empty($key)) {
+            return false;
+        }
+
         $file = array(
             'key'   => $key,
-            'value' => serialize($value),
+            'value' => $this->serialize($value),
             'ttl'   => $ttl,
             'ctime' => time(),
         );
 
-        if ($this->isSafe() && !empty($key)) {
-            return (bool) file_put_contents($this->getFilename($key), json_encode($file));
-        }
-
-        return false;
+        return (bool)file_put_contents($this->getFilename($key), json_encode($file));
     }
 
     /**
@@ -121,44 +106,12 @@ class FilecacheClient implements CacheInterface
     }
 
     /**
-     * @return bool
-     */
-    public function isSafe()
-    {
-        return $this->path !== null;
-    }
-
-    /**
-     * @param StatisticsTrackerInterface $statisticsTracker
-     */
-    public function setStatisticsTracker(StatisticsTrackerInterface $statisticsTracker)
-    {
-        $this->statisticsTracker = $statisticsTracker;
-    }
-
-    /**
-     * @param bool $hit
-     */
-    private function incrementAndWriteStatistics($hit)
-    {
-        if (!$this->statisticsTracker) {
-            return;
-        }
-
-        if ($hit) {
-            $this->statisticsTracker->addHit();
-        } else {
-            $this->statisticsTracker->addMiss();
-        }
-
-        $this->statisticsTracker->write();
-    }
-
-    /**
+     * Build a full path for the provided key
+     *
      * @param string $key
      * @return string
      */
-    private function getFilename($key)
+    protected function getFilename(string $key): string
     {
         return $this->path . DIRECTORY_SEPARATOR . md5($key) . '_file.cache';
     }
@@ -190,14 +143,20 @@ class FilecacheClient implements CacheInterface
      */
     public function has($key)
     {
-        if (empty($key) || !$this->isSafe()) {
+        if (empty($key)) {
             return false;
         }
 
-        if (!file_exists($this->getFilename($key))) {
-            return false;
-        }
+        return file_exists($this->getFilename($key));
+    }
 
-        return true;
+    protected function serialize($data)
+    {
+        return serialize($data);
+    }
+
+    protected function unserialize($data, array $options = [])
+    {
+        return unserialize($data, $options);
     }
 }

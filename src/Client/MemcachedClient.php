@@ -2,7 +2,6 @@
 
 namespace Beryllium\Cache\Client;
 
-use Beryllium\Cache\Client\ServerVerifier\MemcacheServerVerifier;
 use Beryllium\Cache\Client\ServerVerifier\ServerVerifierInterface;
 use Psr\SimpleCache\CacheInterface;
 
@@ -19,12 +18,6 @@ use Psr\SimpleCache\CacheInterface;
  *
  * If the expiration value is 0 (the default), the item never expires (although it may be deleted from the server to
  * make place for other items).
- *
- * @uses    CacheInterface
- * @package
- * @version $id$
- * @author  Kevin Boyd <beryllium@beryllium.ca>
- * @license See LICENSE.md
  */
 class MemcachedClient implements CacheInterface
 {
@@ -33,18 +26,21 @@ class MemcachedClient implements CacheInterface
     /** @var \Memcached|null Memcached instance */
     protected $memcache;
 
-    protected $safe    = false;
-    protected $servers = [];
+    /** @var ServerVerifierInterface|null */
+    protected $serverVerifier;
 
     /**
      * Constructs the cache client using an injected Memcache instance
      *
      * @access public
+     *
+     * @param \Memcached|null              $memcache
+     * @param ServerVerifierInterface|null $serverVerifier
      */
-    public function __construct(\Memcached $memcache = null, ServerVerifierInterface $serverVerifier = null)
+    public function __construct(?\Memcached $memcache = null, ?ServerVerifierInterface $serverVerifier = null)
     {
         $this->memcache       = $memcache ?: new \Memcached();
-        $this->serverVerifier = $serverVerifier ?: new MemcacheServerVerifier();
+        $this->serverVerifier = $serverVerifier;
     }
 
     /**
@@ -57,10 +53,6 @@ class MemcachedClient implements CacheInterface
      */
     public function get($key, $default = null)
     {
-        if (!$this->safe) {
-            return $default;
-        }
-
         $result = $this->memcache->get($key);
 
         if (!$result && \Memcached::RES_NOTFOUND === $this->memcache->getResultCode()) {
@@ -81,11 +73,7 @@ class MemcachedClient implements CacheInterface
      */
     public function set($key, $value, $ttl = null)
     {
-        if ($this->safe) {
-            return $this->memcache->set($key, $value, $ttl);
-        }
-
-        return false;
+        return $this->memcache->set($key, $value, $ttl);
     }
 
     /**
@@ -97,11 +85,7 @@ class MemcachedClient implements CacheInterface
      */
     public function delete($key)
     {
-        if ($this->safe) {
-            return $this->memcache->delete($key);
-        }
-
-        return false;
+        return $this->memcache->delete($key);
     }
 
     /**
@@ -124,15 +108,11 @@ class MemcachedClient implements CacheInterface
      */
     public function addServer($ip = '127.0.0.1', $port = 11211)
     {
-        if (!$this->serverVerifier->verify($ip, $port)) {
+        if ($this->serverVerifier && !$this->serverVerifier->verify($ip, $port)) {
             return false;
         }
 
-        if ($status = $this->memcache->addServer($ip, $port)) {
-            $this->safe = true;
-        }
-
-        return $status;
+        return $this->memcache->addServer($ip, $port);
     }
 
     /**

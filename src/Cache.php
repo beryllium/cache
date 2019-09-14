@@ -7,12 +7,6 @@ use Psr\SimpleCache\InvalidArgumentException;
 
 /**
  * Base cache implementation that standardizes calls to cache clients
- *
- * @uses CacheInterface
- * @package
- * @version $id$
- * @author Kevin Boyd <beryllium@beryllium.ca>
- * @license See LICENSE.md
  */
 class Cache implements CacheInterface
 {
