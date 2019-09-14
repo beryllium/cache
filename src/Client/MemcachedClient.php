@@ -2,7 +2,6 @@
 
 namespace Beryllium\Cache\Client;
 
-use Beryllium\Cache\Client\ServerVerifier\MemcacheServerVerifier;
 use Beryllium\Cache\Client\ServerVerifier\ServerVerifierInterface;
 use Psr\SimpleCache\CacheInterface;
 

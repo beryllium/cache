@@ -34,22 +34,6 @@ class MemcachedClientTest extends TestCase
         $this->assertNull($result);
     }
 
-    public function testUnsafeSetReturnsFalse()
-    {
-        $client = new MemcachedClient($this->memcache);
-        $result = $client->set('test-key', 'test-value', 555);
-
-        $this->assertFalse($result);
-    }
-
-    public function testUnsafeDeleteReturnsFalse()
-    {
-        $client = new MemcachedClient($this->memcache);
-        $result = $client->delete('test-key');
-
-        $this->assertFalse($result);
-    }
-
     public function testAddServerCallsVerifier()
     {
         $ip = '127.0.0.1';
