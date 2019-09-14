@@ -155,7 +155,7 @@ class FilecacheClient implements CacheInterface
         return serialize($data);
     }
 
-    protected function unserialize($data, ?$options = null)
+    protected function unserialize($data, $options = null)
     {
         return unserialize($data, $options);
     }
