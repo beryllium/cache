@@ -3,7 +3,6 @@
 namespace Beryllium\Cache\Client;
 
 use Beryllium\Cache\Exception\InvalidPathException;
-use Beryllium\Cache\Statistics\Tracker\StatisticsTrackerInterface;
 use Psr\SimpleCache\CacheInterface;
 
 /**
@@ -19,9 +18,6 @@ class FilecacheClient implements CacheInterface
     use MultipleKeysTrait;
 
     private $path;
-
-    /** @var \Beryllium\Cache\Statistics\Tracker\StatisticsTrackerInterface */
-    private $statisticsTracker;
 
     /**
      * @param string|null $path
@@ -56,27 +52,20 @@ class FilecacheClient implements CacheInterface
         }
 
         if (!file_exists($this->getFilename($key))) {
-            $this->incrementAndWriteStatistics(false);
-
             return $default;
         }
 
         $file = json_decode(file_get_contents($this->getFilename($key)), true);
 
         if (!is_array($file) || $file['key'] !== $key) {
-            $this->incrementAndWriteStatistics(false);
-
             return $default;
         }
 
         if ($file['ttl'] != 0 && time() - $file['ctime'] > $file['ttl']) {
-            $this->incrementAndWriteStatistics(false);
             $this->delete($key);
 
             return $default;
         }
-
-        $this->incrementAndWriteStatistics(true);
 
         return $this->unserialize($file['value']) ?? $default;
     }
@@ -119,32 +108,6 @@ class FilecacheClient implements CacheInterface
         }
 
         return false;
-    }
-
-    /**
-     * @param StatisticsTrackerInterface $statisticsTracker
-     */
-    public function setStatisticsTracker(StatisticsTrackerInterface $statisticsTracker)
-    {
-        $this->statisticsTracker = $statisticsTracker;
-    }
-
-    /**
-     * @param bool $hit
-     */
-    private function incrementAndWriteStatistics($hit)
-    {
-        if (!$this->statisticsTracker) {
-            return;
-        }
-
-        if ($hit) {
-            $this->statisticsTracker->addHit();
-        } else {
-            $this->statisticsTracker->addMiss();
-        }
-
-        $this->statisticsTracker->write();
     }
 
     /**
