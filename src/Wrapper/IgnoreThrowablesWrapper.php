@@ -1,10 +1,10 @@
 <?php
 
-namespace Beryllium\Cache\Client;
+namespace Beryllium\Cache\Wrapper;
 
 use Psr\SimpleCache\CacheInterface;
 
-class DeathEater implements CacheInterface
+class IgnoreThrowablesWrapper implements CacheInterface
 {
     protected $client;
 

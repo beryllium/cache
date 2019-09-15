@@ -1,16 +1,16 @@
 <?php
 
-namespace Beryllium\Cache\Tests\Client;
+namespace Beryllium\Cache\Tests\Wrapper;
 
-use Beryllium\Cache\Client\DeathEater;
+use Beryllium\Cache\Wrapper\IgnoreThrowablesWrapper;
 use PHPUnit\Framework\TestCase;
 use Psr\SimpleCache\CacheInterface;
 
-class DeathEaterTest extends TestCase
+class IgnoreThrowablesWrapperTest extends TestCase
 {
     public function testGet()
     {
-        $cache = new DeathEater($this->getNoisyClass());
+        $cache = new IgnoreThrowablesWrapper($this->getNoisyClass());
 
         $this->assertSame(
             'default-value',
@@ -20,7 +20,7 @@ class DeathEaterTest extends TestCase
 
     public function testSet()
     {
-        $cache = new DeathEater($this->getNoisyClass());
+        $cache = new IgnoreThrowablesWrapper($this->getNoisyClass());
 
         $this->assertFalse(
             $cache->set('key-does-not-matter', 'default-value')
@@ -29,7 +29,7 @@ class DeathEaterTest extends TestCase
 
     public function testDelete()
     {
-        $cache = new DeathEater($this->getNoisyClass());
+        $cache = new IgnoreThrowablesWrapper($this->getNoisyClass());
 
         $this->assertFalse(
             $cache->delete('key-does-not-matter')
@@ -38,7 +38,7 @@ class DeathEaterTest extends TestCase
 
     public function testClear()
     {
-        $cache = new DeathEater($this->getNoisyClass());
+        $cache = new IgnoreThrowablesWrapper($this->getNoisyClass());
 
         $this->assertFalse($cache->clear());
     }
@@ -54,7 +54,7 @@ class DeathEaterTest extends TestCase
      */
     public function testGetMultiple()
     {
-        $cache = new DeathEater($this->getNoisyClass());
+        $cache = new IgnoreThrowablesWrapper($this->getNoisyClass());
 
         $this->assertSame(
             [],
@@ -67,7 +67,7 @@ class DeathEaterTest extends TestCase
 
     public function testSetMultiple()
     {
-        $cache = new DeathEater($this->getNoisyClass());
+        $cache = new IgnoreThrowablesWrapper($this->getNoisyClass());
 
         $this->assertFalse(
             $cache->setMultiple(
@@ -78,7 +78,7 @@ class DeathEaterTest extends TestCase
 
     public function testDeleteMultiple()
     {
-        $cache = new DeathEater($this->getNoisyClass());
+        $cache = new IgnoreThrowablesWrapper($this->getNoisyClass());
 
         $this->assertFalse(
             $cache->deleteMultiple(
@@ -89,7 +89,7 @@ class DeathEaterTest extends TestCase
 
     public function testHas()
     {
-        $cache = new DeathEater($this->getNoisyClass());
+        $cache = new IgnoreThrowablesWrapper($this->getNoisyClass());
 
         $this->assertFalse(
             $cache->has('key-does-not-matter')
