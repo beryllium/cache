@@ -42,7 +42,7 @@ class FilecacheClient implements CacheInterface
      */
     public function get($key, $default = null)
     {
-        if (empty($key)) {
+        if (empty($key) || empty($this->path)) {
             return $default;
         }
 
@@ -74,7 +74,7 @@ class FilecacheClient implements CacheInterface
      */
     public function set($key, $value, $ttl = null)
     {
-        if (empty($key)) {
+        if (empty($key) || empty($this->path)) {
             return false;
         }
 
@@ -96,7 +96,7 @@ class FilecacheClient implements CacheInterface
     {
         $filename = $this->getFilename($key);
 
-        if (file_exists($filename)) {
+        if (!empty($this->path) && file_exists($filename)) {
             unlink($filename);
 
             return true;
@@ -143,7 +143,7 @@ class FilecacheClient implements CacheInterface
      */
     public function has($key)
     {
-        if (empty($key)) {
+        if (empty($key) || empty($this->path)) {
             return false;
         }
 
