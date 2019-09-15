@@ -1,10 +1,10 @@
 <?php
 
-namespace Beryllium\Cache\Client;
+namespace Beryllium\Cache\Wrapper;
 
 use Psr\SimpleCache\CacheInterface;
 
-class CascadeClient implements CacheInterface
+class CascadeWrapper implements CacheInterface
 {
     /** @var CacheInterface[] An ordered list of all cascading clients */
     protected $clients = [];
@@ -19,7 +19,7 @@ class CascadeClient implements CacheInterface
         $this->clients = $clients;
     }
 
-    public function addClient(CacheInterface $client): CascadeClient
+    public function addClient(CacheInterface $client): CascadeWrapper
     {
         $this->clients[] = $client;
 
@@ -116,14 +116,14 @@ class CascadeClient implements CacheInterface
         return false;
     }
 
-    public function enableBackfill(): CascadeClient
+    public function enableBackfill(): CascadeWrapper
     {
         $this->backfill = true;
 
         return $this;
     }
 
-    public function disableBackfill(): CascadeClient
+    public function disableBackfill(): CascadeWrapper
     {
         $this->backfill = false;
 

@@ -1,12 +1,12 @@
 <?php
 
-namespace Beryllium\Cache\Tests\Client;
+namespace Beryllium\Cache\Tests\Wrapper;
 
-use Beryllium\Cache\Client\CascadeClient;
+use Beryllium\Cache\Wrapper\CascadeWrapper;
 use Beryllium\Cache\Client\MemoryClient;
 use PHPUnit\Framework\TestCase;
 
-class CascadeTest extends TestCase
+class CascadeWrapperTest extends TestCase
 {
     protected $client1;
     protected $client2;
@@ -18,7 +18,7 @@ class CascadeTest extends TestCase
 
         $this->client1 = new MemoryClient();
         $this->client2 = new MemoryClient();
-        $this->cascade = new CascadeClient(
+        $this->cascade = new CascadeWrapper(
             $this->client1,
             $this->client2
         );
