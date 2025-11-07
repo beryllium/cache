@@ -78,12 +78,12 @@ class FilecacheClient implements CacheInterface
             return false;
         }
 
-        $file = array(
+        $file = [
             'key'   => $key,
             'value' => $this->serialize($value),
             'ttl'   => $ttl,
             'ctime' => time(),
-        );
+        ];
 
         return (bool)file_put_contents($this->getFilename($key), json_encode($file));
     }

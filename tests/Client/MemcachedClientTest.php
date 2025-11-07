@@ -98,10 +98,10 @@ class MemcachedClientTest extends TestCase
 
     public function addServerResponseProvider()
     {
-        return array(
-            array(true, true),
-            array(false, false)
-        );
+        return [
+            [true, true],
+            [false, false]
+        ];
     }
 
     public function testSafeGetCallsMemcached()

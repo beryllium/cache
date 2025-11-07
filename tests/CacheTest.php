@@ -117,10 +117,10 @@ class CacheTest extends TestCase
 
     public function keyPrefixProvider()
     {
-        return array(
-            array('test-key', 'test-key'),
-            array('test-key', 'prefix_test-key', 'prefix_'),
-            array('another-key', 'be--another-key', 'be--'),
-        );
+        return [
+            ['test-key', 'test-key'],
+            ['test-key', 'prefix_test-key', 'prefix_'],
+            ['another-key', 'be--another-key', 'be--'],
+        ];
     }
 }
