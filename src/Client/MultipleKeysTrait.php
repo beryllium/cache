@@ -50,7 +50,7 @@ trait MultipleKeysTrait
      *   MUST be thrown if $values is neither an array nor a Traversable,
      *   or if any of the $values are not a legal value.
      */
-    public function setMultiple($values, $ttl = null)
+    public function setMultiple($values, $ttl = null): bool
     {
         foreach ($values as $key => $value) {
             $this->set($key, $value, $ttl);
@@ -70,7 +70,7 @@ trait MultipleKeysTrait
      *   MUST be thrown if $keys is neither an array nor a Traversable,
      *   or if any of the $keys are not a legal value.
      */
-    public function deleteMultiple($keys)
+    public function deleteMultiple($keys): bool
     {
         array_map(
             function ($key) {

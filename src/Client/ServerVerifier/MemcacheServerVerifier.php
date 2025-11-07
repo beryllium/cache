@@ -24,7 +24,7 @@ class MemcacheServerVerifier implements ServerVerifierInterface
      * @param int $port Port that memcache is running on
      * @return bool True if the socket opens successfully, or false if it fails
      */
-    public function verify($ip, $port)
+    public function verify($ip, $port): bool
     {
         $errorNumber = null;
         $errorString = null;
