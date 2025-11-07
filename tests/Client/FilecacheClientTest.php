@@ -28,7 +28,7 @@ class FilecacheClientTest extends TestCase
         $this->cache = new FilecacheClient(vfsStream::url('cacheDir'));
     }
 
-    public function testFilecacheConstructNonexistentPath()
+    public function testFilecacheConstructNonexistentPath(): void
     {
         $this->expectException(InvalidPathException::class);
         $this->expectExceptionMessage('Provided path directory does not exist and/or could not be created');
@@ -36,14 +36,14 @@ class FilecacheClientTest extends TestCase
         new FilecacheClient('/tmp/this/folder/does/not/exist');
     }
 
-    public function testSetAndGet()
+    public function testSetAndGet(): void
     {
         $this->cache->set('test', 'testing', 20);
 
         $this->assertEquals('testing', $this->cache->get('test'));
     }
 
-    public function testDelete()
+    public function testDelete(): void
     {
         $this->assertTrue($this->cache->set('test', 'testing', 20));
 

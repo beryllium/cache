@@ -25,7 +25,7 @@ class CacheTest extends TestCase
     /**
      * @dataProvider keyPrefixProvider
      */
-    public function testGetCallsClient($key, $expectedKey, $prefix = null)
+    public function testGetCallsClient($key, $expectedKey, $prefix = null): void
     {
         $this->client->expects($this->once())
             ->method('get')
@@ -43,7 +43,7 @@ class CacheTest extends TestCase
     /**
      * @dataProvider keyPrefixProvider
      */
-    public function testSetCallsClient($key, $expectedKey, $prefix = null)
+    public function testSetCallsClient($key, $expectedKey, $prefix = null): void
     {
         $value = 'test-value';
         $ttl = 500;
@@ -65,7 +65,7 @@ class CacheTest extends TestCase
         $cache->set($key, $value, $ttl);
     }
 
-    public function testSetUsesDefaultTtl()
+    public function testSetUsesDefaultTtl(): void
     {
         $this->client->expects($this->once())
             ->method('set')
@@ -79,7 +79,7 @@ class CacheTest extends TestCase
         $cache->set('test-key', 'test-value');
     }
 
-    public function testSetUsesProvidedTtl()
+    public function testSetUsesProvidedTtl(): void
     {
         $ttl = 1200;
 
@@ -100,7 +100,7 @@ class CacheTest extends TestCase
     /**
      * @dataProvider keyPrefixProvider
      */
-    public function testDeleteCallsClient($key, $expectedKey, $prefix = null)
+    public function testDeleteCallsClient($key, $expectedKey, $prefix = null): void
     {
         $this->client->expects($this->once())
             ->method('delete')

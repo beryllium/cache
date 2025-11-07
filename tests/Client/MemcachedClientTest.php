@@ -26,7 +26,7 @@ class MemcachedClientTest extends TestCase
             ->getMock();
     }
 
-    public function testUnsafeGetReturnsNull()
+    public function testUnsafeGetReturnsNull(): void
     {
         $client = new MemcachedClient($this->memcache);
         $result = $client->get('test-key');
@@ -34,7 +34,7 @@ class MemcachedClientTest extends TestCase
         $this->assertNull($result);
     }
 
-    public function testAddServerCallsVerifier()
+    public function testAddServerCallsVerifier(): void
     {
         $ip = '127.0.0.1';
         $port = 555;
@@ -48,7 +48,7 @@ class MemcachedClientTest extends TestCase
         $client->addServer($ip, $port);
     }
 
-    public function testVerifierFailureReturnsFalse()
+    public function testVerifierFailureReturnsFalse(): void
     {
         $this->serverVerifier->expects($this->any())
             ->method('verify')
@@ -60,7 +60,7 @@ class MemcachedClientTest extends TestCase
         $this->assertFalse($result);
     }
 
-    public function testAddServerCallsMemcached()
+    public function testAddServerCallsMemcached(): void
     {
         $ip = '127.0.0.1';
         $port = 555;
@@ -80,7 +80,7 @@ class MemcachedClientTest extends TestCase
     /**
      * @dataProvider addServerResponseProvider
      */
-    public function testAddServerResultIsReturned($addServerResult, $expectedReturn)
+    public function testAddServerResultIsReturned($addServerResult, $expectedReturn): void
     {
         $this->serverVerifier->expects($this->any())
             ->method('verify')
@@ -104,7 +104,7 @@ class MemcachedClientTest extends TestCase
         ];
     }
 
-    public function testSafeGetCallsMemcached()
+    public function testSafeGetCallsMemcached(): void
     {
         $key = 'test-key';
 
@@ -116,7 +116,7 @@ class MemcachedClientTest extends TestCase
         $client->get($key);
     }
 
-    public function testSafeSetCallsMemcached()
+    public function testSafeSetCallsMemcached(): void
     {
         $key = 'test-key';
         $value = 'test-value';
@@ -130,7 +130,7 @@ class MemcachedClientTest extends TestCase
         $client->set($key, $value, $ttl);
     }
 
-    public function testSafeDeleteCallsMemcached()
+    public function testSafeDeleteCallsMemcached(): void
     {
         $key = 'test-key';
 

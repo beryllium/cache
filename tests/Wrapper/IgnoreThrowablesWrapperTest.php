@@ -8,7 +8,7 @@ use Psr\SimpleCache\CacheInterface;
 
 class IgnoreThrowablesWrapperTest extends TestCase
 {
-    public function testGet()
+    public function testGet(): void
     {
         $cache = new IgnoreThrowablesWrapper($this->getNoisyClass());
 
@@ -18,7 +18,7 @@ class IgnoreThrowablesWrapperTest extends TestCase
         );
     }
 
-    public function testSet()
+    public function testSet(): void
     {
         $cache = new IgnoreThrowablesWrapper($this->getNoisyClass());
 
@@ -27,7 +27,7 @@ class IgnoreThrowablesWrapperTest extends TestCase
         );
     }
 
-    public function testDelete()
+    public function testDelete(): void
     {
         $cache = new IgnoreThrowablesWrapper($this->getNoisyClass());
 
@@ -36,7 +36,7 @@ class IgnoreThrowablesWrapperTest extends TestCase
         );
     }
 
-    public function testClear()
+    public function testClear(): void
     {
         $cache = new IgnoreThrowablesWrapper($this->getNoisyClass());
 
@@ -52,7 +52,7 @@ class IgnoreThrowablesWrapperTest extends TestCase
      *
      * Going with the former for now.
      */
-    public function testGetMultiple()
+    public function testGetMultiple(): void
     {
         $cache = new IgnoreThrowablesWrapper($this->getNoisyClass());
 
@@ -65,7 +65,7 @@ class IgnoreThrowablesWrapperTest extends TestCase
         );
     }
 
-    public function testSetMultiple()
+    public function testSetMultiple(): void
     {
         $cache = new IgnoreThrowablesWrapper($this->getNoisyClass());
 
@@ -76,7 +76,7 @@ class IgnoreThrowablesWrapperTest extends TestCase
         );
     }
 
-    public function testDeleteMultiple()
+    public function testDeleteMultiple(): void
     {
         $cache = new IgnoreThrowablesWrapper($this->getNoisyClass());
 
@@ -87,7 +87,7 @@ class IgnoreThrowablesWrapperTest extends TestCase
         );
     }
 
-    public function testHas()
+    public function testHas(): void
     {
         $cache = new IgnoreThrowablesWrapper($this->getNoisyClass());
 

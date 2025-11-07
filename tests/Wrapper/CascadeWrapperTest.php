@@ -24,7 +24,7 @@ class CascadeWrapperTest extends TestCase
         );
     }
 
-    public function testSimpleSetAndGet()
+    public function testSimpleSetAndGet(): void
     {
         $this->cascade->set('test1', 'working');
         $this->assertSame('working', $this->client1->get('test1'));
@@ -32,7 +32,7 @@ class CascadeWrapperTest extends TestCase
         $this->assertSame('working', $this->cascade->get('test1'));
     }
 
-    public function testCascadeWithoutBackfill()
+    public function testCascadeWithoutBackfill(): void
     {
         $this->client2->set('test2', 'works');
         $this->assertTrue($this->cascade->has('test2'));
@@ -42,7 +42,7 @@ class CascadeWrapperTest extends TestCase
         $this->assertNull($this->client1->get('test2'));
     }
 
-    public function testCascadeWithBackfill()
+    public function testCascadeWithBackfill(): void
     {
         $this->cascade->enableBackfill();
 
@@ -54,7 +54,7 @@ class CascadeWrapperTest extends TestCase
         $this->assertSame('works', $this->client1->get('test3'));
     }
 
-    public function testDelete()
+    public function testDelete(): void
     {
         $this->cascade->set('test1', 'working');
         $this->assertSame('working', $this->client1->get('test1'));
@@ -67,7 +67,7 @@ class CascadeWrapperTest extends TestCase
         $this->assertNull($this->cascade->get('test1'));
     }
 
-    public function testClear()
+    public function testClear(): void
     {
         $this->cascade->set('test1', 'working');
         $this->assertSame('working', $this->client1->get('test1'));
@@ -80,7 +80,7 @@ class CascadeWrapperTest extends TestCase
         $this->assertNull($this->cascade->get('test1'));
     }
 
-    public function testSetAndGetMultiple()
+    public function testSetAndGetMultiple(): void
     {
         $data = [
             'test1' => 'working',
@@ -99,7 +99,7 @@ class CascadeWrapperTest extends TestCase
         $this->assertSame($expected, $this->cascade->getMultiple(array_keys($data)));
     }
 
-    public function testDeleteMultiple()
+    public function testDeleteMultiple(): void
     {
         $data = [
             'test1' => 'working',
