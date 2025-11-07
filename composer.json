@@ -28,7 +28,8 @@
         "mikey179/vfsstream": "1.2.*",
         "phpunit/phpunit": "^8.3",
         "ext-memcached": "*",
-        "ext-apcu": "*"
+        "ext-apcu": "*",
+        "rector/rector": "^2.2"
     },
     "autoload":
     {
