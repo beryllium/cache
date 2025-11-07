@@ -7,29 +7,33 @@
     "authors": [
         {
             "name": "Kevin Boyd (aka Beryllium)",
-            "homepage": "http://whateverthing.com/"
+            "homepage": "https://whateverthing.com/"
         },
         {
             "name": "Jeremy Livingston",
-            "homepage": "http://github.com/jeremylivingston"
+            "homepage": "https://github.com/jeremylivingston"
         },
         {
             "name": "Nechaev Yaroslav",
-            "homepage": "http://github.com/Remper"
+            "homepage": "https://github.com/Remper"
         }
     ],
     "require":
     {
-        "php": ">=7.2.0",
+        "php": ">=8.1.0",
         "psr/simple-cache": "^1.0"
     },
     "require-dev":
     {
-        "mikey179/vfsstream": "1.2.*",
-        "phpunit/phpunit": "^8.3",
+        "mikey179/vfsstream": "^v1.6",
+        "phpunit/phpunit": "^9.6",
         "ext-memcached": "*",
         "ext-apcu": "*",
-        "rector/rector": "^2.2"
+        "rector/rector": "^2.2",
+        "phpunit/php-code-coverage": "^9.2.31",
+        "phpunit/php-file-iterator": "^3.0.6",
+        "phpunit/php-text-template": "^2.0.4",
+        "phpunit/php-timer": "^5.0.3"
     },
     "autoload":
     {
