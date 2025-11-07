@@ -13,9 +13,6 @@ class Cache implements CacheInterface
     public const DEFAULT_TTL    = 300;
     public const DEFAULT_PREFIX = '';
 
-    /** @var CacheInterface $client */
-    private $client;
-
     private $ttl;
     private $prefix;
 
@@ -23,9 +20,8 @@ class Cache implements CacheInterface
      * @param string|null    $prefix
      * @param int|null       $ttl
      */
-    public function __construct(CacheInterface $client, string $prefix = null, int $ttl = null)
+    public function __construct(private readonly CacheInterface $client, string $prefix = null, int $ttl = null)
     {
-        $this->client = $client;
         $this->prefix = $prefix ?? static::DEFAULT_PREFIX;
         $this->ttl    = $ttl    ?? static::DEFAULT_TTL;
     }
@@ -59,7 +55,7 @@ class Cache implements CacheInterface
      */
     public function set($key, $value, $ttl = null): bool
     {
-        $ttl = $ttl ?? $this->ttl;
+        $ttl ??= $this->ttl;
 
         return $this->client->set($this->buildKey($key), $value, $ttl);
     }

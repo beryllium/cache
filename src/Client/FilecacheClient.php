@@ -12,7 +12,7 @@ class FilecacheClient implements CacheInterface
 {
     use MultipleKeysTrait;
 
-    private $path;
+    private string $path;
 
     public function __construct(string $path)
     {
@@ -149,7 +149,7 @@ class FilecacheClient implements CacheInterface
         return serialize($data);
     }
 
-    protected function unserialize($data, array $options = [])
+    protected function unserialize($data, array $options = []): mixed
     {
         return unserialize($data, $options);
     }

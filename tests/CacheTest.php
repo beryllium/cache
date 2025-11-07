@@ -14,7 +14,7 @@ use Psr\SimpleCache\CacheInterface;
  */
 class CacheTest extends TestCase
 {
-    protected $client;
+    protected \PHPUnit\Framework\MockObject\MockObject $client;
 
     protected function setUp(): void
     {

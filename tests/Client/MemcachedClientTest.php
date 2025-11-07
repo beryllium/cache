@@ -14,8 +14,8 @@ use Beryllium\Cache\Client\ServerVerifier\ServerVerifierInterface;
  */
 class MemcachedClientTest extends TestCase
 {
-    protected $memcache;
-    protected $serverVerifier;
+    protected \PHPUnit\Framework\MockObject\MockObject $memcache;
+    protected \PHPUnit\Framework\MockObject\MockObject $serverVerifier;
 
     protected function setUp(): void
     {

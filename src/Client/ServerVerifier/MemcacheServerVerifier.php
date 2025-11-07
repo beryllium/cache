@@ -12,7 +12,7 @@ namespace Beryllium\Cache\Client\ServerVerifier;
  */
 class MemcacheServerVerifier implements ServerVerifierInterface
 {
-    private $ttl = 0.2;
+    private float $ttl = 0.2;
 
     /**
      * Spend a few tenths of a second opening a socket to the requested IP and port

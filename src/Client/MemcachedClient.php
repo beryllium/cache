@@ -24,20 +24,16 @@ class MemcachedClient implements CacheInterface
     use MultipleKeysTrait;
 
     /** @var \Memcached|null Memcached instance */
-    protected $memcache;
-
-    /** @var ServerVerifierInterface|null */
-    protected $serverVerifier;
+    protected \Memcached $memcache;
 
     /**
      * Constructs the cache client using an injected Memcache instance
      *
      * @access public
      */
-    public function __construct(?\Memcached $memcache = null, ?ServerVerifierInterface $serverVerifier = null)
+    public function __construct(?\Memcached $memcache = null, protected ?\Beryllium\Cache\Client\ServerVerifier\ServerVerifierInterface $serverVerifier = null)
     {
         $this->memcache       = $memcache ?: new \Memcached();
-        $this->serverVerifier = $serverVerifier;
     }
 
     /**

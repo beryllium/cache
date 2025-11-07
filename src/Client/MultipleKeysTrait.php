@@ -29,9 +29,7 @@ trait MultipleKeysTrait
     public function getMultiple($keys, $default = null): array
     {
         return array_map(
-            function ($key) use ($default) {
-                return $this->get($key, $default);
-            },
+            fn($key) => $this->get($key, $default),
             array_combine((array)$keys, (array)$keys)
         );
     }
@@ -73,9 +71,7 @@ trait MultipleKeysTrait
     public function deleteMultiple($keys): bool
     {
         array_map(
-            function ($key) {
-                return $this->delete($key);
-            },
+            fn($key) => $this->delete($key),
             (array)$keys
         );
 
