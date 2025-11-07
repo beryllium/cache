@@ -80,7 +80,7 @@ class MemcachedClientTest extends TestCase
     /**
      * @dataProvider addServerResponseProvider
      */
-    public function testAddServerResultIsReturned($addServerResult, $expectedReturn): void
+    public function testAddServerResultIsReturned(bool $addServerResult, bool $expectedReturn): void
     {
         $this->serverVerifier->expects($this->any())
             ->method('verify')
@@ -96,7 +96,7 @@ class MemcachedClientTest extends TestCase
         $this->assertEquals($expectedReturn, $result);
     }
 
-    public function addServerResponseProvider()
+    public function addServerResponseProvider(): array
     {
         return [
             [true, true],
@@ -142,7 +142,7 @@ class MemcachedClientTest extends TestCase
         $client->delete($key);
     }
 
-    private function getSafeClient()
+    private function getSafeClient(): \Beryllium\Cache\Client\MemcachedClient
     {
         $this->serverVerifier->expects($this->any())
             ->method('verify')

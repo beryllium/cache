@@ -14,14 +14,11 @@ class FilecacheClient implements CacheInterface
 
     private $path;
 
-    /**
-     * @param string $path
-     */
     public function __construct(string $path)
     {
         $path = rtrim($path, DIRECTORY_SEPARATOR);
 
-        if (empty($path)) {
+        if ($path === '' || $path === '0') {
             throw new InvalidPathException('Path was not provided');
         }
 
@@ -107,9 +104,6 @@ class FilecacheClient implements CacheInterface
 
     /**
      * Build a full path for the provided key
-     *
-     * @param string $key
-     * @return string
      */
     protected function getFilename(string $key): string
     {
@@ -150,7 +144,7 @@ class FilecacheClient implements CacheInterface
         return file_exists($this->getFilename($key));
     }
 
-    protected function serialize($data)
+    protected function serialize($data): string
     {
         return serialize($data);
     }

@@ -11,7 +11,7 @@ class MemoryClientTest extends TestCase
     /**
      * @dataProvider setHasGetProvider
      */
-    public function testSetHasGet($key, $value, $ttl, $wait, $expected): void
+    public function testSetHasGet(string $key, string $value, int $ttl, int $wait, string $expected): void
     {
         $client = $this->getTestClient();
         $this->assertFalse($client->has($key));
@@ -21,7 +21,7 @@ class MemoryClientTest extends TestCase
         $this->assertSame($expected, $client->get($key));
     }
 
-    public function setHasGetProvider(): ?\Generator
+    public function setHasGetProvider(): \Generator
     {
         yield 'simple' => [
             'test',
@@ -35,7 +35,7 @@ class MemoryClientTest extends TestCase
     /**
      * @dataProvider expirationProvider
      */
-    public function testExpiration($key, $value, $ttl, $wait, $expected): void
+    public function testExpiration(string $key, string $value, int $ttl, int $wait, ?string $expected): void
     {
         $client = $this->getTestClient();
         $client->set($key, $value, $ttl);
@@ -44,7 +44,7 @@ class MemoryClientTest extends TestCase
         $this->assertSame($expected, $client->get($key));
     }
 
-    public function expirationProvider(): ?\Generator
+    public function expirationProvider(): \Generator
     {
         yield '1-second-exactly' => [
             'test',
@@ -87,12 +87,12 @@ class MemoryClientTest extends TestCase
     /**
      * @dataProvider multipleProvider
      */
-    public function testMultiple($values, $ttl, $default, $expected): void
+    public function testMultiple(array $values, int $ttl, string $default, array $expected): void
     {
         $client = $this->getTestClient();
         $client->setMultiple($values, $ttl);
 
-        foreach ($values as $key => $value) {
+        foreach (array_keys($values) as $key) {
             $this->assertTrue($client->has($key));
         }
 
@@ -100,7 +100,7 @@ class MemoryClientTest extends TestCase
         $this->assertSame($expected, $actual);
     }
 
-    public function multipleProvider(): ?\Generator
+    public function multipleProvider(): \Generator
     {
         yield 'simple' => [
             [

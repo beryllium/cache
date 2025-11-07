@@ -29,7 +29,6 @@ class ApcuClient implements CacheInterface
      * @param string $key Unique key to identify the data
      * @param mixed $value Data to store in the cache
      * @param int $ttl Lifetime for stored data (in seconds)
-     * @return boolean
      */
     public function set($key, $value, $ttl = null): bool
     {
@@ -40,7 +39,6 @@ class ApcuClient implements CacheInterface
      * Delete a value from the cache
      *
      * @param string $key
-     * @return boolean
      */
     public function delete($key): bool
     {
@@ -131,7 +129,6 @@ class ApcuClient implements CacheInterface
      *
      * @param string $key The cache item key.
      *
-     * @return bool
      *
      * @throws \Psr\SimpleCache\InvalidArgumentException
      *   MUST be thrown if the $key string is not a legal value.

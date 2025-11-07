@@ -96,45 +96,45 @@ class IgnoreThrowablesWrapperTest extends TestCase
         );
     }
 
-    protected function getNoisyClass()
+    protected function getNoisyClass(): \Psr\SimpleCache\CacheInterface
     {
         return new class implements CacheInterface {
-            public function get($key, $default = null)
+            public function get($key, $default = null): void
             {
                 throw new \RuntimeException('test');
             }
 
-            public function set($key, $value, $ttl = null)
+            public function set($key, $value, $ttl = null): void
             {
                 throw new \RuntimeException('test');
             }
 
-            public function delete($key)
+            public function delete($key): void
             {
                 throw new \RuntimeException('test');
             }
 
-            public function clear()
+            public function clear(): void
             {
                 throw new \RuntimeException('test');
             }
 
-            public function getMultiple($keys, $default = null)
+            public function getMultiple($keys, $default = null): void
             {
                 throw new \RuntimeException('test');
             }
 
-            public function setMultiple($values, $ttl = null)
+            public function setMultiple($values, $ttl = null): void
             {
                 throw new \RuntimeException('test');
             }
 
-            public function deleteMultiple($keys)
+            public function deleteMultiple($keys): void
             {
                 throw new \RuntimeException('test');
             }
 
-            public function has($key)
+            public function has($key): void
             {
                 throw new \RuntimeException('test');
             }

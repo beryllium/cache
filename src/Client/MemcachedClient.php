@@ -33,9 +33,6 @@ class MemcachedClient implements CacheInterface
      * Constructs the cache client using an injected Memcache instance
      *
      * @access public
-     *
-     * @param \Memcached|null              $memcache
-     * @param ServerVerifierInterface|null $serverVerifier
      */
     public function __construct(?\Memcached $memcache = null, ?ServerVerifierInterface $serverVerifier = null)
     {
@@ -145,6 +142,6 @@ class MemcachedClient implements CacheInterface
         // Very wasteful. Definitely don't rely on this.
         $this->get($key);
 
-        return !(\Memcached::RES_NOTFOUND === $this->memcache->getResultCode());
+        return \Memcached::RES_NOTFOUND !== $this->memcache->getResultCode();
     }
 }

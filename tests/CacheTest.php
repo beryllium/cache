@@ -25,7 +25,7 @@ class CacheTest extends TestCase
     /**
      * @dataProvider keyPrefixProvider
      */
-    public function testGetCallsClient($key, $expectedKey, $prefix = null): void
+    public function testGetCallsClient(string $key, string $expectedKey, string $prefix = null): void
     {
         $this->client->expects($this->once())
             ->method('get')
@@ -43,7 +43,7 @@ class CacheTest extends TestCase
     /**
      * @dataProvider keyPrefixProvider
      */
-    public function testSetCallsClient($key, $expectedKey, $prefix = null): void
+    public function testSetCallsClient(string $key, string $expectedKey, string $prefix = null): void
     {
         $value = 'test-value';
         $ttl = 500;
@@ -100,7 +100,7 @@ class CacheTest extends TestCase
     /**
      * @dataProvider keyPrefixProvider
      */
-    public function testDeleteCallsClient($key, $expectedKey, $prefix = null): void
+    public function testDeleteCallsClient(string $key, string $expectedKey, string $prefix = null): void
     {
         $this->client->expects($this->once())
             ->method('delete')
@@ -115,7 +115,7 @@ class CacheTest extends TestCase
         $cache->delete($key);
     }
 
-    public function keyPrefixProvider()
+    public function keyPrefixProvider(): array
     {
         return [
             ['test-key', 'test-key'],

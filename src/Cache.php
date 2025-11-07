@@ -20,7 +20,6 @@ class Cache implements CacheInterface
     private $prefix;
 
     /**
-     * @param CacheInterface $client
      * @param string|null    $prefix
      * @param int|null       $ttl
      */
@@ -56,7 +55,6 @@ class Cache implements CacheInterface
      * @param mixed  $value The value you want to store in the cache
      * @param int    $ttl   Optional: Lifetime of the data
      *
-     * @return boolean
      * @throws InvalidArgumentException
      */
     public function set($key, $value, $ttl = null): bool
@@ -81,18 +79,12 @@ class Cache implements CacheInterface
 
     /**
      * Change the default lifetime of the data (default: 300 seconds - five minutes)
-     *
-     * @param int $ttl
-     * @return void
      */
     public function setTtl(int $ttl): void
     {
         $this->ttl = $ttl;
     }
 
-    /**
-     * @return CacheInterface
-     */
     public function getClient(): CacheInterface
     {
         return $this->client;
@@ -110,9 +102,8 @@ class Cache implements CacheInterface
      * Build the key with its prefix to send to the client
      *
      * @param $key
-     * @return string
      */
-    private function buildKey($key): string
+    private function buildKey(string $key): string
     {
         return $this->prefix . $key;
     }
@@ -200,7 +191,6 @@ class Cache implements CacheInterface
      *
      * @param string $key The cache item key.
      *
-     * @return bool
      *
      * @throws InvalidArgumentException
      *   MUST be thrown if the $key string is not a legal value.

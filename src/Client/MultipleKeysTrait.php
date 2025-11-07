@@ -26,7 +26,7 @@ trait MultipleKeysTrait
      *   MUST be thrown if $keys is neither an array nor a Traversable,
      *   or if any of the $keys are not a legal value.
      */
-    public function getMultiple($keys, $default = null)
+    public function getMultiple($keys, $default = null): array
     {
         return array_map(
             function ($key) use ($default) {
