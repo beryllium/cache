@@ -20,7 +20,7 @@ class Cache implements CacheInterface
      * @param string|null    $prefix
      * @param int|null       $ttl
      */
-    public function __construct(private readonly CacheInterface $client, string $prefix = null, int $ttl = null)
+    public function __construct(private readonly CacheInterface $client, ?string $prefix = null, ?int $ttl = null)
     {
         $this->prefix = $prefix ?? static::DEFAULT_PREFIX;
         $this->ttl    = $ttl    ?? static::DEFAULT_TTL;
